@@ -943,8 +943,7 @@
         }
 
         // Render Platform Details (Platforms Section)
-        // Render Platform Details (Platforms Section)
-function renderPlatformDetails_OLD() {
+        function renderPlatformDetails() {
             const container = document.getElementById('platform-details');
             const statusColors = { critical: 'border-red-500/30 bg-red-500/5', active: 'border-oleavine-500/30 bg-oleavine-500/5', minimal: 'border-white/10 bg-white/5' };
 
@@ -953,20 +952,31 @@ function renderPlatformDetails_OLD() {
                 const label = p.subscribers ? 'subscribers' : 'followers';
                 const contentCount = p.videos || p.posts;
                 const contentLabel = p.videos ? 'videos' : 'posts';
+                
+                // Make YouTube clickable to open detail view
+                const clickAction = p.name === 'YouTube' 
+                    ? `onclick="showSection('youtube'); setTimeout(fetchYouTubeDetailData, 100);" style="cursor: pointer;"` 
+                    : `onclick="window.open('${p.url}', '_blank')" style="cursor: pointer;"`;
+                
+                const viewDetails = p.name === 'YouTube' 
+                    ? '<div class="mt-3 pt-3 border-t border-white/10 text-center"><span class="text-xs text-oleavine-400">Click for detailed analytics →</span></div>' 
+                    : '';
+                
                 return `
-                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}">
+                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}" ${clickAction}>
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-12 h-12 rounded-lg ${p.color} flex items-center justify-center"><i class="${p.icon} text-white text-lg"></i></div>
                             <div>
                                 <h3 class="font-display font-bold">${p.name}</h3>
-                                <a href="${p.url}" target="_blank" class="text-xs text-oleavine-400">${p.handle} →</a>
+                                <span class="text-xs text-white/40">${p.handle}</span>
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-4 text-center">
-                            <div><div class="text-2xl font-bold">${count}></div><div class="text-[10px] text-white/40 uppercase">${label}</div></div>
-                            <div><div class="text-2xl font-bold">${contentCount}></div><div class="text-[10px] text-white/40 uppercase">${contentLabel}</div></div>
-                            <div><div class="text-2xl font-bold text-oleavine-400">${p.engagement}%></div><div class="text-[10px] text-white/40 uppercase">engagement</div></div>
+                            <div><div class="text-2xl font-bold">${count}</div><div class="text-[10px] text-white/40 uppercase">${label}</div></div>
+                            <div><div class="text-2xl font-bold">${contentCount}</div><div class="text-[10px] text-white/40 uppercase">${contentLabel}</div></div>
+                            <div><div class="text-2xl font-bold text-oleavine-400">${p.engagement}%</div><div class="text-[10px] text-white/40 uppercase">engagement</div></div>
                         </div>
+                        ${viewDetails}
                     </div>
                 `;
             }).join('');
