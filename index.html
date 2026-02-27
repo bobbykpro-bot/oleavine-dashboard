@@ -399,8 +399,8 @@
                                     <i class="fa-brands fa-tiktok text-2xl"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium">How tea tree oil works!</p>
-                                    <p class="text-xs text-white/40">2.4M views • 6.2% engagement</p>
+                                    <p class="text-sm font-medium">Latest TikTok video</p>
+                                    <p class="text-xs text-white/40">Connect TikTok API for metrics</p>
                                 </div>
                             </a>
                             
@@ -409,8 +409,8 @@
                                     <i class="fa-brands fa-tiktok text-2xl"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium">Live love Theratree!</p>
-                                    <p class="text-xs text-white/40">8.2K views • 5.1% engagement</p>
+                                    <p class="text-sm font-medium">Previous video</p>
+                                    <p class="text-xs text-white/40">Connect TikTok API for metrics</p>
                                 </div>
                             </a>
                             
@@ -419,8 +419,8 @@
                                     <i class="fa-brands fa-tiktok text-2xl"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium">Check out our shop</p>
-                                    <p class="text-xs text-white/40">5.1K views • 4.2% engagement</p>
+                                    <p class="text-sm font-medium">Older video</p>
+                                    <p class="text-xs text-white/40">Connect TikTok API for metrics</p>
                                 </div>
                             </a>
                         </div>
@@ -1536,18 +1536,28 @@
                 const contentCount = p.videos || p.posts;
                 const contentLabel = p.videos ? 'videos' : 'posts';
                 
-                // Make platforms clickable
-                const clickAction = p.name === 'YouTube' ? "showSection('youtube')" :
-                                   p.name === 'TikTok' ? "showSection('tiktok')" :
-                                   p.name === 'Instagram' ? "showSection('instagram')" :
-                                   "window.open('${p.url}', '_blank')";
+                // Make all platforms clickable
+                let clickHandler = '';
+                if (p.name === 'YouTube') {
+                    clickHandler = `onclick="showSection('youtube'); setTimeout(fetchYouTubeDetailData, 100);"`;
+                } else if (p.name === 'TikTok') {
+                    clickHandler = `onclick="showSection('tiktok');"`;
+                } else if (p.name === 'Instagram') {
+                    clickHandler = `onclick="showSection('instagram');"`;
+                } else if (p.name === 'Facebook') {
+                    clickHandler = `onclick="showSection('facebook');"`;
+                } else if (p.name === 'LinkedIn') {
+                    clickHandler = `onclick="showSection('linkedin');"`;
+                } else {
+                    clickHandler = `onclick="window.open('${p.url}', '_blank');"`;
+                }
                 
-                const viewDetails = p.name === 'YouTube' || p.name === 'TikTok' || p.name === 'Instagram' 
+                const viewDetails = p.name === 'YouTube' || p.name === 'TikTok' || p.name === 'Instagram' || p.name === 'Facebook' || p.name === 'LinkedIn' 
                     ? `<div class="mt-3 pt-3 border-t border-white/10 text-center"><span class="text-xs text-oleavine-400">Click for detailed analytics →</span></div>` 
                     : '';
                 
                 return `
-                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}" onclick="${clickAction}" style="cursor: pointer;">
+                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}" ${clickHandler} style="cursor: pointer;">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-12 h-12 rounded-lg ${p.color} flex items-center justify-center"><i class="${p.icon} text-white text-lg"></i></div>
                             <div>
