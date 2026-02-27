@@ -1199,15 +1199,35 @@
             }
         });
         
-        // Sync across tabs - listen for storage changes
-        window.addEventListener('storage', (e) => {
-            if (e.key === ADS_CHECKLIST_KEY) {
-                console.log('🔄 Checklist updated in another tab');
-                if (document.getElementById('ads-checklist')) {
-                    renderAdsChecklist();
+        // Sync across tabs - use BroadcastChannel if available, fallback to storage event
+        if ('BroadcastChannel' in window) {
+            const adsChannel = new BroadcastChannel('oleavine_ads_sync');
+            adsChannel.onmessage = (e) => {
+                if (e.data.type === 'checklist_updated') {
+                    console.log('🔄 Sync received from another tab');
+                    if (document.getElementById('ads-checklist')) {
+                        renderAdsChecklist();
+                    }
                 }
-            }
-        });
+            };
+            
+            // Override toggle function to broadcast
+            const originalToggle = toggleAdsItem;
+            window.toggleAdsItem = function(id) {
+                originalToggle(id);
+                adsChannel.postMessage({ type: 'checklist_updated', item: id });
+            };
+        } else {
+            // Fallback to storage event
+            window.addEventListener('storage', (e) => {
+                if (e.key === ADS_CHECKLIST_KEY) {
+                    console.log('🔄 Checklist updated in another tab');
+                    if (document.getElementById('ads-checklist')) {
+                        renderAdsChecklist();
+                    }
+                }
+            });
+        }
         
         console.log('✅ YouTube detail functions loaded');
         console.log('✅ Ads checklist loaded (syncs across tabs)');
