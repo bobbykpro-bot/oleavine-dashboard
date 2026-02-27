@@ -1205,31 +1205,44 @@
             }
         });
         
-        // Listen for updates from other tabs
+        // Listen for updates from other tabs via BroadcastChannel
         if ('BroadcastChannel' in window) {
             const adsChannel = new BroadcastChannel('oleavine_ads_sync');
             adsChannel.onmessage = (e) => {
                 if (e.data.type === 'checklist_updated') {
-                    console.log('🔄 Sync received from another tab');
+                    console.log('🔄 Sync received from another tab (BroadcastChannel)');
                     if (document.getElementById('ads-checklist')) {
                         renderAdsChecklist();
                     }
                 }
             };
-        } else {
-            // Fallback to storage event for older browsers
-            window.addEventListener('storage', (e) => {
-                if (e.key === ADS_CHECKLIST_KEY) {
-                    console.log('🔄 Checklist updated in another tab');
-                    if (document.getElementById('ads-checklist')) {
-                        renderAdsChecklist();
-                    }
-                }
-            });
         }
         
+        // Also listen for storage events (works across all tabs)
+        window.addEventListener('storage', (e) => {
+            if (e.key === ADS_CHECKLIST_KEY) {
+                console.log('🔄 Sync received from another tab (storage event)');
+                if (document.getElementById('ads-checklist')) {
+                    renderAdsChecklist();
+                }
+            }
+        });
+        
+        // Polling fallback - check every 500ms for changes
+        let lastChecklistState = JSON.stringify(loadAdsChecklist());
+        setInterval(() => {
+            const currentState = JSON.stringify(loadAdsChecklist());
+            if (currentState !== lastChecklistState) {
+                console.log('🔄 Change detected via polling');
+                lastChecklistState = currentState;
+                if (document.getElementById('ads-checklist')) {
+                    renderAdsChecklist();
+                }
+            }
+        }, 500);
+        
         console.log('✅ YouTube detail functions loaded');
-        console.log('✅ Ads checklist loaded (syncs across tabs)');
+        console.log('✅ Ads checklist loaded (3 sync methods active)');
     </script>
 
     </body>
