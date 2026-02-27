@@ -350,70 +350,197 @@
                 <!-- PAID ADS SECTION -->
                 <div id="section-ads" class="hidden">
                     <div class="mb-6">
-                        <h2 class="text-2xl font-display font-bold mb-2">Paid Ads Readiness</h2>
-                        <p class="text-white/50 text-sm">Preparing to launch paid campaigns</p>
+                        <h2 class="text-2xl font-display font-bold mb-2">Getting Started with Paid Ads</h2>
+                        <p class="text-white/50 text-sm">Your roadmap to launching profitable campaigns</p>
                     </div>
 
-                    <!-- Readiness Score -->
-                    <div class="glass-card rounded-xl p-6 mb-6 border border-amber-500/30">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="font-display font-bold text-lg">Launch Readiness</h3>
-                                <p class="text-white/50 text-sm">Click items to mark as complete</p>
+                    <!-- Status Banner -->
+                    <div class="glass-card rounded-xl p-6 mb-6 border border-amber-500/30 bg-amber-500/5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-rocket text-amber-400 text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-display font-bold text-lg">Pre-Launch Phase</h3>
+                                <p class="text-white/60 text-sm">You're in the preparation stage. Complete the steps below before running your first campaign.</p>
                             </div>
                             <div class="text-right">
-                                <div class="text-4xl font-display font-bold text-amber-400" id="readiness-percent">0%</div>
-                                <div class="text-xs text-white/40" id="readiness-count">0 of 17 items complete</div>
+                                <div class="text-3xl font-display font-bold text-amber-400">35%</div>
+                                <div class="text-xs text-white/40">Ready</div>
                             </div>
-                        </div>
-                        <div class="h-3 rounded-full bg-white/10 overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-oleavine-400 transition-all duration-500" id="readiness-bar" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <!-- Checklist -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div class="glass-card rounded-xl p-5">
-                            <h3 class="font-display font-bold mb-4">📋 Checklist</h3>
-                            <div class="space-y-3" id="ads-checklist">
-                                <!-- Populated by JavaScript -->
-                            </div>
+                    <!-- Phase 1: Foundation -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-oleavine-500/20 flex items-center justify-center text-oleavine-400 font-bold">1</div>
+                            <h3 class="font-display font-bold">Foundation (Week 1-2)</h3>
+                            <span class="ml-auto px-2 py-1 rounded bg-oleavine-500/20 text-oleavine-400 text-xs">In Progress</span>
                         </div>
-
-                        <div class="glass-card rounded-xl p-5">
-                            <h3 class="font-display font-bold mb-4">💡 Next Steps</h3>
-                            <div class="space-y-3" id="next-steps">
-                                <p class="text-sm text-white/60">Complete items above to unlock recommendations</p>
-                            </div>
-                        </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Customer LTV calculated</span>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="font-medium">Facebook Business Manager</span>
                                 </div>
+                                <p class="text-xs text-white/50">✅ Set up and verified</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="font-medium">TikTok Ads Account</span>
+                                </div>
+                                <p class="text-xs text-white/50">✅ Created and funded</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fa-regular fa-circle text-white/30"></i>
+                                    <span class="font-medium text-white/60">Google Ads Account</span>
+                                </div>
+                                <p class="text-xs text-white/40">📝 Create at ads.google.com</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fa-regular fa-circle text-white/30"></i>
+                                    <span class="font-medium text-white/60">Payment Methods</span>
+                                </div>
+                                <p class="text-xs text-white/40">📝 Add credit card to all platforms</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: Tracking -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/40 font-bold">2</div>
+                            <h3 class="font-display font-bold text-white/60">Tracking Setup (Week 2-3)</h3>
+                            <span class="ml-auto px-2 py-1 rounded bg-white/10 text-white/40 text-xs">Pending</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                <i class="fa-brands fa-facebook text-blue-400 text-xl mb-2"></i>
+                                <p class="font-medium text-sm">Meta Pixel</p>
+                                <p class="text-xs text-white/40 mt-1">Install on oleavine.com</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                <i class="fa-brands fa-tiktok text-white text-xl mb-2"></i>
+                                <p class="font-medium text-sm">TikTok Pixel</p>
+                                <p class="text-xs text-white/40 mt-1">Track video engagement</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                <i class="fa-solid fa-chart-line text-oleavine-400 text-xl mb-2"></i>
+                                <p class="font-medium text-sm">Conversion Tracking</p>
+                                <p class="text-xs text-white/40 mt-1">Track purchases, add to cart</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3: Creative -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/40 font-bold">3</div>
+                            <h3 class="font-display font-bold text-white/60">Creative Assets (Week 3-4)</h3>
+                            <span class="ml-auto px-2 py-1 rounded bg-white/10 text-white/40 text-xs">Pending</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5">
+                                <div class="w-10 h-10 rounded bg-oleavine-500/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-video text-oleavine-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">3+ UGC Video Ads</p>
+                                    <p class="text-xs text-white/40">Hook: Problem → Solution → CTA format</p>
+                                </div>
+                                <span class="text-xs text-amber-400">High Priority</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5">
+                                <div class="w-10 h-10 rounded bg-blue-500/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-image text-blue-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">5+ Static Images</p>
+                                    <p class="text-xs text-white/40">For Instagram/Facebook feed ads</p>
+                                </div>
+                                <span class="text-xs text-white/40">Medium Priority</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5">
+                                <div class="w-10 h-10 rounded bg-purple-500/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-file-alt text-purple-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Ad Copy Variations</p>
+                                    <p class="text-xs text-white/40">3 headlines, 2 descriptions per platform</p>
+                                </div>
+                                <span class="text-xs text-white/40">Medium Priority</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Recommended First Campaign -->
-                    <div class="glass-card rounded-xl p-5">
-                        <h3 class="font-display font-bold mb-4">🚀 Recommended First Campaign</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="p-4 rounded-lg bg-oleavine-500/10 border border-oleavine-500/30">
-                                <div class="text-xs text-oleavine-400 uppercase mb-1">Platform</div>
-                                <div class="text-lg font-bold">TikTok</div>
-                                <div class="text-xs text-white/50 mt-1">Highest organic engagement</div>
+                    <div class="glass-card rounded-xl p-5 mb-6 border border-oleavine-500/30">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-oleavine-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-play text-oleavine-400"></i>
                             </div>
-                            <div class="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
-                                <div class="text-xs text-blue-400 uppercase mb-1">Objective</div>
-                                <div class="text-lg font-bold">Awareness</div>
-                                <div class="text-xs text-white/50 mt-1">Build initial audience</div>
+                            <h3 class="font-display font-bold">Recommended First Campaign</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="p-4 rounded-lg bg-black/30">
+                                <i class="fa-brands fa-tiktok text-2xl mb-2"></i>
+                                <p class="font-bold">TikTok</p>
+                                <p class="text-xs text-white/40">Best for your audience</p>
                             </div>
-                            <div class="p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                                <div class="text-xs text-purple-400 uppercase mb-1">Budget</div>
-                                <div class="text-lg font-bold">$50/day</div>
-                                <div class="text-xs text-white/50 mt-1">$1,500/month test</div>
+                            
+                            <div class="p-4 rounded-lg bg-blue-500/10">
+                                <p class="text-xs text-blue-400 uppercase">Objective</p>
+                                <p class="font-bold">Awareness</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-green-500/10">
+                                <p class="text-xs text-green-400 uppercase">Budget</p>
+                                <p class="font-bold">$50/day</p>
+                            </div>
+                            
+                            <div class="p-4 rounded-lg bg-purple-500/10">
+                                <p class="text-xs text-purple-400 uppercase">Timeline</p>
+                                <p class="font-bold">2-4 weeks</p>
                             </div>
                         </div>
+                        
+                        <div class="p-4 rounded-lg bg-oleavine-500/10 border border-oleavine-500/30">
+                            <p class="text-sm"><strong>Why TikTok first?</strong> Your organic engagement is highest there (6.2%). Starting with awareness campaigns builds your pixel data cheaply before scaling to conversion campaigns.</p>
+                        </div>
+                    </div>
+
+                    <!-- Resources -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="https://business.facebook.com/business/help" target="_blank" class="glass-card rounded-xl p-4 hover:bg-white/5 transition-colors flex items-center gap-3">
+                            <i class="fa-brands fa-facebook text-blue-400 text-xl"></i>
+                            <div>
+                                <p class="font-medium">Meta Ads Help Center</p>
+                                <p class="text-xs text-white/40">Official guides and tutorials →</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://ads.tiktok.com/help/article?aid=10021" target="_blank" class="glass-card rounded-xl p-4 hover:bg-white/5 transition-colors flex items-center gap-3">
+                            <i class="fa-brands fa-tiktok text-white text-xl"></i>
+                            <div>
+                                <p class="font-medium">TikTok Ads Academy</p>
+                                <p class="text-xs text-white/40">Free courses for beginners →</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
