@@ -1138,6 +1138,12 @@
             state[id] = !state[id];
             saveAdsChecklist(state);
             
+            // Broadcast to other tabs
+            if ('BroadcastChannel' in window) {
+                const adsChannel = new BroadcastChannel('oleavine_ads_sync');
+                adsChannel.postMessage({ type: 'checklist_updated', item: id });
+            }
+            
             // Update visual without full re-render
             const isComplete = state[id];
             const icon = document.getElementById(`icon-${id}`);
@@ -1199,7 +1205,7 @@
             }
         });
         
-        // Sync across tabs - use BroadcastChannel if available, fallback to storage event
+        // Listen for updates from other tabs
         if ('BroadcastChannel' in window) {
             const adsChannel = new BroadcastChannel('oleavine_ads_sync');
             adsChannel.onmessage = (e) => {
@@ -1210,15 +1216,8 @@
                     }
                 }
             };
-            
-            // Override toggle function to broadcast
-            const originalToggle = toggleAdsItem;
-            window.toggleAdsItem = function(id) {
-                originalToggle(id);
-                adsChannel.postMessage({ type: 'checklist_updated', item: id });
-            };
         } else {
-            // Fallback to storage event
+            // Fallback to storage event for older browsers
             window.addEventListener('storage', (e) => {
                 if (e.key === ADS_CHECKLIST_KEY) {
                     console.log('🔄 Checklist updated in another tab');
