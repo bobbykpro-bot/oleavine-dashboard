@@ -295,93 +295,33 @@
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <h3 class="font-display font-bold text-lg">Launch Readiness</h3>
-                                <p class="text-white/50 text-sm">Complete these items before launching ads</p>
+                                <p class="text-white/50 text-sm">Click items to mark as complete</p>
                             </div>
                             <div class="text-right">
-                                <div class="text-4xl font-display font-bold text-amber-400">35%</div>
-                                <div class="text-xs text-white/40">6 of 17 items complete</div>
+                                <div class="text-4xl font-display font-bold text-amber-400" id="readiness-percent">0%</div>
+                                <div class="text-xs text-white/40" id="readiness-count">0 of 17 items complete</div>
                             </div>
                         </div>
                         <div class="h-3 rounded-full bg-white/10 overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-oleavine-400" style="width: 35%"></div>
+                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-oleavine-400 transition-all duration-500" id="readiness-bar" style="width: 0%"></div>
                         </div>
                     </div>
 
                     <!-- Checklist -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div class="glass-card rounded-xl p-5">
-                            <h3 class="font-display font-bold mb-4">✅ Completed</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">Facebook Business Manager</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">TikTok Ads Account</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">Brand guidelines defined</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">Landing page created</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">Payment methods added</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
-                                    <span class="text-sm">Initial budget set ($5K/mo)</span>
-                                </div>
+                            <h3 class="font-display font-bold mb-4">📋 Checklist</h3>
+                            <div class="space-y-3" id="ads-checklist">
+                                <!-- Populated by JavaScript -->
                             </div>
                         </div>
 
                         <div class="glass-card rounded-xl p-5">
-                            <h3 class="font-display font-bold mb-4">📝 Still Needed</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Google Ads Account</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Meta Pixel installed</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">TikTok Pixel installed</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">3+ UGC video assets</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Creative testing plan</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Lookalike audiences</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Retargeting audiences</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">Conversion tracking</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">A/B test framework</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-regular fa-circle text-white/20"></i>
-                                    <span class="text-sm text-white/60">ROAS tracking dashboard</span>
-                                </div>
+                            <h3 class="font-display font-bold mb-4">💡 Next Steps</h3>
+                            <div class="space-y-3" id="next-steps">
+                                <p class="text-sm text-white/60">Complete items above to unlock recommendations</p>
+                            </div>
+                        </div>
                                 <div class="flex items-center gap-3">
                                     <i class="fa-regular fa-circle text-white/20"></i>
                                     <span class="text-sm text-white/60">Customer LTV calculated</span>
@@ -1016,7 +956,15 @@
             renderPlatformList();
             renderPlatformDetails();
             initChart();
+            
+            // Initialize ads checklist if on that page
+            if (document.getElementById('ads-checklist')) {
+                renderAdsChecklist();
+            }
+            
             console.log('✅ Dashboard loaded');
+            console.log('📊 Platforms:', Object.keys(platforms).length);
+            console.log('🎨 Click any item in Paid Ads to mark complete');
         });
     </script>
     <!-- YouTube API Integration -->
@@ -1131,7 +1079,128 @@
             return num.toString();
         }
         
+        // ===== INTERACTIVE ADS CHECKLIST =====
+        const ADS_CHECKLIST_KEY = 'oleavine_ads_checklist';
+        
+        const adsChecklistItems = [
+            { id: 'fb_business', text: 'Facebook Business Manager', category: 'setup' },
+            { id: 'tiktok_ads', text: 'TikTok Ads Account', category: 'setup' },
+            { id: 'google_ads', text: 'Google Ads Account', category: 'setup' },
+            { id: 'brand_guidelines', text: 'Brand guidelines defined', category: 'setup' },
+            { id: 'landing_page', text: 'Landing page created', category: 'setup' },
+            { id: 'payment', text: 'Payment methods added', category: 'setup' },
+            { id: 'budget', text: 'Initial budget set ($5K/mo)', category: 'setup' },
+            { id: 'meta_pixel', text: 'Meta Pixel installed', category: 'tracking' },
+            { id: 'tiktok_pixel', text: 'TikTok Pixel installed', category: 'tracking' },
+            { id: 'conversion', text: 'Conversion tracking', category: 'tracking' },
+            { id: 'ugc_videos', text: '3+ UGC video assets', category: 'creative' },
+            { id: 'creative_plan', text: 'Creative testing plan', category: 'creative' },
+            { id: 'lookalike', text: 'Lookalike audiences', category: 'audience' },
+            { id: 'retargeting', text: 'Retargeting audiences', category: 'audience' },
+            { id: 'ab_test', text: 'A/B test framework', category: 'testing' },
+            { id: 'roas_tracking', text: 'ROAS tracking dashboard', category: 'testing' },
+            { id: 'ltv_calc', text: 'Customer LTV calculated', category: 'testing' }
+        ];
+        
+        function loadAdsChecklist() {
+            const saved = localStorage.getItem(ADS_CHECKLIST_KEY);
+            return saved ? JSON.parse(saved) : {};
+        }
+        
+        function saveAdsChecklist(state) {
+            localStorage.setItem(ADS_CHECKLIST_KEY, JSON.stringify(state));
+        }
+        
+        function renderAdsChecklist() {
+            const container = document.getElementById('ads-checklist');
+            if (!container) return;
+            
+            const state = loadAdsChecklist();
+            
+            container.innerHTML = adsChecklistItems.map(item => {
+                const isComplete = state[item.id] || false;
+                const iconClass = isComplete ? 'fa-solid fa-check-circle text-oleavine-400' : 'fa-regular fa-circle text-white/40';
+                const textClass = isComplete ? 'text-white' : 'text-white/60';
+                
+                return `
+                    <div class="flex items-center gap-3 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors" onclick="toggleAdsItem('${item.id}')">
+                        <i class="${iconClass} text-lg" id="icon-${item.id}"></i>
+                        <span class="text-sm ${textClass}" id="text-${item.id}">${item.text}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            updateReadinessScore();
+        }
+        
+        function toggleAdsItem(id) {
+            const state = loadAdsChecklist();
+            state[id] = !state[id];
+            saveAdsChecklist(state);
+            
+            // Update visual without full re-render
+            const isComplete = state[id];
+            const icon = document.getElementById(`icon-${id}`);
+            const text = document.getElementById(`text-${id}`);
+            
+            if (icon) {
+                icon.className = isComplete ? 'fa-solid fa-check-circle text-oleavine-400 text-lg' : 'fa-regular fa-circle text-white/40 text-lg';
+            }
+            if (text) {
+                text.className = isComplete ? 'text-sm text-white' : 'text-sm text-white/60';
+            }
+            
+            updateReadinessScore();
+        }
+        
+        function updateReadinessScore() {
+            const state = loadAdsChecklist();
+            const completed = Object.values(state).filter(v => v).length;
+            const total = adsChecklistItems.length;
+            const percent = Math.round((completed / total) * 100);
+            
+            // Update percentage display
+            const percentEl = document.getElementById('readiness-percent');
+            const countEl = document.getElementById('readiness-count');
+            const barEl = document.getElementById('readiness-bar');
+            
+            if (percentEl) percentEl.textContent = percent + '%';
+            if (countEl) countEl.textContent = `${completed} of ${total} items complete`;
+            if (barEl) barEl.style.width = percent + '%';
+            
+            // Update next steps based on progress
+            updateNextSteps(percent);
+        }
+        
+        function updateNextSteps(percent) {
+            const container = document.getElementById('next-steps');
+            if (!container) return;
+            
+            let message = '';
+            if (percent === 0) {
+                message = '<p class="text-sm text-white/60">Start by completing the setup items on the left. Click any circle to mark as done.</p>';
+            } else if (percent < 30) {
+                message = '<p class="text-sm text-amber-400">🚀 Good start! Focus on completing your ad account setups next.</p>';
+            } else if (percent < 60) {
+                message = '<p class="text-sm text-oleavine-400">📈 Making progress! Install tracking pixels to get accurate data.</p>';
+            } else if (percent < 90) {
+                message = '<p class="text-sm text-oleavine-400">🔥 Almost there! Create your creative assets and you\'re ready to launch.</p>';
+            } else {
+                message = '<p class="text-sm text-green-400">✅ Ready to launch! Start with $50/day on TikTok.</p>';
+            }
+            
+            container.innerHTML = message;
+        }
+        
+        // Initialize checklist when on ads page
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('ads-checklist')) {
+                renderAdsChecklist();
+            }
+        });
+        
         console.log('✅ YouTube detail functions loaded');
+        console.log('✅ Ads checklist loaded');
     </script>
 
     </body>
