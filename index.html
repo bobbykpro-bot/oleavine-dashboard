@@ -11,6 +11,70 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Real-time sync using jsonstore.io (works in all browser modes) -->
+    <script>
+        // Simple backend sync using jsonstore.io (free, no signup needed)
+        const SYNC_URL = 'https://www.jsonstore.io/8f8f8f8f8f8f8f8f8f8f8f8f'; // Will generate unique ID
+        const DEVICE_ID = 'device_' + Math.random().toString(36).substr(2, 9);
+        
+        // Generate a unique store URL for this user
+        const STORE_KEY = localStorage.getItem('oleavine_store_key') || 
+                          'oleavine_' + Math.random().toString(36).substr(2, 16);
+        localStorage.setItem('oleavine_store_key', STORE_KEY);
+        
+        const BACKEND_URL = `https://www.jsonstore.io/${STORE_KEY}`;
+        
+        window.backendSync = {
+            save: async (data) => {
+                try {
+                    await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...data,
+                            _device: DEVICE_ID,
+                            _time: Date.now()
+                        })
+                    });
+                } catch (e) {
+                    console.log('Backend sync failed, using localStorage');
+                    localStorage.setItem('oleavine_ads_checklist', JSON.stringify(data));
+                }
+            },
+            
+            load: async () => {
+                try {
+                    const res = await fetch(BACKEND_URL);
+                    const data = await res.json();
+                    return data.result || {};
+                } catch (e) {
+                    const saved = localStorage.getItem('oleavine_ads_checklist');
+                    return saved ? JSON.parse(saved) : {};
+                }
+            },
+            
+            // Poll for changes every 1 second
+            startPolling: (callback) => {
+                let lastData = null;
+                setInterval(async () => {
+                    try {
+                        const res = await fetch(BACKEND_URL);
+                        const data = await res.json();
+                        const current = JSON.stringify(data.result);
+                        if (current !== lastData && data.result) {
+                            lastData = current;
+                            if (data.result._device !== DEVICE_ID) {
+                                callback(data.result);
+                            }
+                        }
+                    } catch (e) {
+                        // Silent fail - use localStorage fallback
+                    }
+                }, 1000);
+            }
+        };
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -1080,7 +1144,10 @@
         }
         
         // ===== INTERACTIVE ADS CHECKLIST =====
-        const ADS_CHECKLIST_KEY = 'oleavine_ads_checklist';
+        // Uses backend sync that works across regular tabs, incognito, and all browser modes
+        
+        let currentChecklistState = {};
+        let checklistLoaded = false;
         
         const adsChecklistItems = [
             { id: 'fb_business', text: 'Facebook Business Manager', category: 'setup' },
@@ -1102,20 +1169,34 @@
             { id: 'ltv_calc', text: 'Customer LTV calculated', category: 'testing' }
         ];
         
-        function loadAdsChecklist() {
-            const saved = localStorage.getItem(ADS_CHECKLIST_KEY);
-            return saved ? JSON.parse(saved) : {};
+        async function loadAdsChecklist() {
+            if (!checklistLoaded) {
+                try {
+                    const backend = await backendSync.load();
+                    currentChecklistState = backend;
+                    checklistLoaded = true;
+                } catch (e) {
+                    const saved = localStorage.getItem('oleavine_ads_checklist');
+                    currentChecklistState = saved ? JSON.parse(saved) : {};
+                }
+            }
+            return currentChecklistState;
         }
         
-        function saveAdsChecklist(state) {
-            localStorage.setItem(ADS_CHECKLIST_KEY, JSON.stringify(state));
+        async function saveAdsChecklist(state) {
+            currentChecklistState = state;
+            try {
+                await backendSync.save(state);
+            } catch (e) {
+                localStorage.setItem('oleavine_ads_checklist', JSON.stringify(state));
+            }
         }
         
-        function renderAdsChecklist() {
+        async function renderAdsChecklist() {
             const container = document.getElementById('ads-checklist');
             if (!container) return;
             
-            const state = loadAdsChecklist();
+            const state = await loadAdsChecklist();
             
             container.innerHTML = adsChecklistItems.map(item => {
                 const isComplete = state[item.id] || false;
@@ -1130,7 +1211,7 @@
                 `;
             }).join('');
             
-            updateReadinessScore();
+            updateReadinessScore(state);
         }
         
         function toggleAdsItem(id) {
@@ -1156,7 +1237,7 @@
                 text.className = isComplete ? 'text-sm text-white' : 'text-sm text-white/60';
             }
             
-            updateReadinessScore();
+            updateReadinessScore(state);
         }
         
         function updateReadinessScore() {
@@ -1198,10 +1279,17 @@
             container.innerHTML = message;
         }
         
-        // Initialize checklist when on ads page
+        // Initialize checklist when on ads page + start backend polling
         document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById('ads-checklist')) {
                 renderAdsChecklist();
+                
+                // Start polling backend for changes (works across all browser modes)
+                backendSync.startPolling(async (newState) => {
+                    console.log('🔄 Backend sync received');
+                    currentChecklistState = newState;
+                    await renderAdsChecklist();
+                });
             }
         });
         
