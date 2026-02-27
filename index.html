@@ -1199,8 +1199,18 @@
             }
         });
         
+        // Sync across tabs - listen for storage changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === ADS_CHECKLIST_KEY) {
+                console.log('🔄 Checklist updated in another tab');
+                if (document.getElementById('ads-checklist')) {
+                    renderAdsChecklist();
+                }
+            }
+        });
+        
         console.log('✅ YouTube detail functions loaded');
-        console.log('✅ Ads checklist loaded');
+        console.log('✅ Ads checklist loaded (syncs across tabs)');
     </script>
 
     </body>
