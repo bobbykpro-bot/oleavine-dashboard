@@ -4,7 +4,7 @@ Real-time social media command center for Oleavine.
 
 ## 🌐 Live Dashboard
 
-**URL**: https://oleavine.github.io/oleavine-dashboard
+**URL**: [https://oleavine.github.io/oleavine-dashboard](https://bobbykpro-bot.github.io/oleavine-dashboard/)
 
 ## 📊 Features
 
