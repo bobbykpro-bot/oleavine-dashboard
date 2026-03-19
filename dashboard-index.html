@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Oleavine | Social Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        oleavine: {
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-card { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .metric-trend-up { color: #4ade80; }
+        .metric-trend-down { color: #f87171; }
+        /* Fixed layout - content can scroll */
+        .main-scroll { overflow-y: auto; height: calc(100vh - 64px); }
+        .section-content { padding-bottom: 100px; }
+        @media (max-width: 768px) { 
+            .mobile-nav { display: flex !important; } 
+            .main-scroll { padding-bottom: 100px !important; } 
+        }
+        @media (min-width: 769px) { .mobile-nav { display: none !important; } }
+    </style>
+</head>
+<body class="bg-slate-950 text-white min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="hidden lg:flex w-64 glass border-r border-white/5 flex-col h-screen fixed left-0 top-0 z-40">
+            <div class="p-6 border-b border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-oleavine-400 to-oleavine-600 flex items-center justify-center font-bold text-lg">O</div>
+                    <div>
+                        <h1 class="font-display font-bold text-lg">OLEAVINE</h1>
+                        <p class="text-[10px] text-white/40 uppercase">Command Center</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 py-4 px-3">
+                <div class="mb-6">
+                    <p class="text-[10px] text-white/30 uppercase mb-2 px-3">Overview</p>
+                    <a href="#" onclick="showSection('overview'); return false;" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm bg-oleavine-500/20 border-l-2 border-oleavine-400 text-white">
+                        <i class="fa-solid fa-chart-line w-5"></i> Executive Summary
+                    </a>
+                    <a href="#" onclick="showSection('platforms'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-solid fa-layer-group w-5"></i> Platforms
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    <p class="text-[10px] text-white/30 uppercase mb-2 px-3">Growth</p>
+                    <a href="#" onclick="showSection('ads'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-solid fa-bullhorn w-5"></i> Paid Ads
+                        <span class="ml-auto px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px]">35%</span>
+                    </a>
+                    <a href="#" onclick="showSection('competitors'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-solid fa-chess w-5"></i> Competitors
+                    </a>
+                </div>
+                
+                <div>
+                    <p class="text-[10px] text-white/30 uppercase mb-2 px-3">Content</p>
+                    <a href="#" onclick="showSection('keywords'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-solid fa-magnifying-glass-chart w-5"></i> Keywords
+                    </a>
+                    <a href="#" onclick="showSection('calendar'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-regular fa-calendar w-5"></i> Calendar
+                    </a>
+                    <a href="#" onclick="showSection('library'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5">
+                        <i class="fa-solid fa-photo-film w-5"></i> Library
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 flex flex-col min-w-0 min-h-screen">
+            <header class="h-16 glass border-b border-white/5 flex items-center justify-between px-6 z-40">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-white/10">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title">Executive Summary</h2>
+                        <p class="text-[10px] text-amber-400">📊 Sample Data — API integration pending</p>
+                    </div>
+                </div>
+            </header>
+
+            <div id="main-scroll" class="main-scroll flex-1 p-4 md:p-6">
+                
+                <!-- OVERVIEW SECTION -->
+                <div id="section-overview" class="fade-in section-content">
+                    
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Total Followers</span>
+                            <div class="text-2xl font-display font-bold">2,526</div>
+                            <div class="text-[10px] text-white/30">Across 5 platforms</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Avg Engagement</span>
+                            <div class="text-2xl font-display font-bold text-oleavine-400">3.3%</div>
+                            <div class="text-[10px] text-white/30">Industry avg: 2.1%</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Est. Reach</span>
+                            <div class="text-2xl font-display font-bold text-emerald-400">892K</div>
+                            <div class="text-[10px] text-white/30">Last 30 days</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Ad Readiness</span>
+                            <div class="text-2xl font-display font-bold text-amber-400">35%</div>
+                            <div class="text-[10px] text-white/30">Not running ads yet</div>
+                        </div>
+                    </div>
+
+                    <!-- Platform Health Check -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-display font-bold">Platform Health Check</h3>
+                            <button onclick="showSection('platforms')" class="text-xs text-oleavine-400">View Details →</button>
+                        </div>
+                        <div id="platform-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Performance Chart -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <h3 class="font-display font-bold mb-4">7-Day Performance Trend</h3>
+                        <div class="h-64">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PLATFORMS SECTION -->
+                <div id="section-platforms" class="hidden section-content">
+                    <h2 class="text-2xl font-display font-bold mb-4">Platform Analytics</h2>
+                    <div id="platform-details" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- PAID ADS SECTION -->
+                <div id="section-ads" class="hidden section-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-display font-bold mb-2">Paid Ads Readiness</h2>
+                        <p class="text-white/50 text-sm">Preparing to launch paid campaigns</p>
+                    </div>
+
+                    <!-- Readiness Score -->
+                    <div class="glass-card rounded-xl p-6 mb-6 border border-amber-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-display font-bold text-lg">Launch Readiness</h3>
+                                <p class="text-white/50 text-sm">Complete these items before launching ads</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-4xl font-display font-bold text-amber-400">35%</div>
+                                <div class="text-xs text-white/40">6 of 17 items complete</div>
+                            </div>
+                        </div>
+                        <div class="h-3 rounded-full bg-white/10 overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-oleavine-400" style="width: 35%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="glass-card rounded-xl p-5">
+                            <h3 class="font-display font-bold mb-4">✅ Completed</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">Facebook Business Manager</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">TikTok Ads Account</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">Brand guidelines defined</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">Landing page created</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">Payment methods added</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-check-circle text-oleavine-400"></i>
+                                    <span class="text-sm">Initial budget set ($5K/mo)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-xl p-5">
+                            <h3 class="font-display font-bold mb-4">📝 Still Needed</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Google Ads Account</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Meta Pixel installed</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">TikTok Pixel installed</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">3+ UGC video assets</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Creative testing plan</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Lookalike audiences</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Retargeting audiences</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Conversion tracking</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">A/B test framework</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">ROAS tracking dashboard</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle text-white/20"></i>
+                                    <span class="text-sm text-white/60">Customer LTV calculated</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended First Campaign -->
+                    <div class="glass-card rounded-xl p-5">
+                        <h3 class="font-display font-bold mb-4">🚀 Recommended First Campaign</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-lg bg-oleavine-500/10 border border-oleavine-500/30">
+                                <div class="text-xs text-oleavine-400 uppercase mb-1">Platform</div>
+                                <div class="text-lg font-bold">TikTok</div>
+                                <div class="text-xs text-white/50 mt-1">Highest organic engagement</div>
+                            </div>
+                            <div class="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                                <div class="text-xs text-blue-400 uppercase mb-1">Objective</div>
+                                <div class="text-lg font-bold">Awareness</div>
+                                <div class="text-xs text-white/50 mt-1">Build initial audience</div>
+                            </div>
+                            <div class="p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                                <div class="text-xs text-purple-400 uppercase mb-1">Budget</div>
+                                <div class="text-lg font-bold">$50/day</div>
+                                <div class="text-xs text-white/50 mt-1">$1,500/month test</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPETITOR ANALYSIS SECTION -->
+                <div id="section-competitors" class="hidden section-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-display font-bold mb-2">Competitor Intelligence</h2>
+                        <p class="text-white/50 text-sm">Market landscape & opportunities</p>
+                    </div>
+
+                    <!-- Competitor Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="glass-card rounded-xl p-5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded bg-blue-600 flex items-center justify-center font-bold">DS</div>
+                                <div>
+                                    <h3 class="font-bold">Dr. Squatch</h3>
+                                    <p class="text-xs text-white/40">Direct competitor</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Est. Monthly Spend</span>
+                                    <span class="font-medium">$500K+</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Primary Platform</span>
+                                    <span class="font-medium">YouTube, Meta</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Angle</span>
+                                    <span class="font-medium">"Natural soap for men"</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-white/10">
+                                <div class="text-xs text-amber-400">💡 Opportunity: They're ignoring gym/hygiene angle</div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-xl p-5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded bg-green-600 flex items-center justify-center font-bold">N</div>
+                                <div>
+                                    <h3 class="font-bold">Native</h3>
+                                    <p class="text-xs text-white/40">Big brand competitor</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Est. Monthly Spend</span>
+                                    <span class="font-medium">$2M+</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Primary Platform</span>
+                                    <span class="font-medium">TV, Meta, TikTok</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Angle</span>
+                                    <span class="font-medium">"Simple, clean ingredients"</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-white/10">
+                                <div class="text-xs text-amber-400">💡 Opportunity: They're not targeting athletes</div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-xl p-5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 rounded bg-purple-600 flex items-center justify-center font-bold">DM</div>
+                                <div>
+                                    <h3 class="font-bold">Dove Men+Care</h3>
+                                    <p class="text-xs text-white/40">Mass market giant</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Est. Monthly Spend</span>
+                                    <span class="font-medium">$5M+</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Primary Platform</span>
+                                    <span class="font-medium">TV, Sports sponsorships</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-white/60">Angle</span>
+                                    <span class="font-medium">"Real strength, real care"</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-white/10">
+                                <div class="text-xs text-amber-400">💡 Opportunity: They're not natural/organic focused</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Your Position -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <h3 class="font-display font-bold mb-4">🎯 Your Positioning Opportunity</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="text-oleavine-400 font-medium mb-2">Where they compete:</h4>
+                                <ul class="text-sm text-white/60 space-y-1">
+                                    <li>• General "natural" positioning</li>
+                                    <li>• Men's grooming market</li>
+                                    <li>• Mass appeal messaging</li>
+                                    <li>• Price-conscious consumers</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-oleavine-400 font-medium mb-2">Where YOU can win:</h4>
+                                <ul class="text-sm text-white/60 space-y-1">
+                                    <li>• Athletes & gym-goers (specific!)</li>
+                                    <li>• Tea tree + neem differentiation</li>
+                                    <li>• Anti-fungal/foot odor solution</li>
+                                    <li>• Skincare for active lifestyles</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keyword Gap -->
+                    <div class="glass-card rounded-xl p-5">
+                        <h3 class="font-display font-bold mb-4">🔍 Keyword Opportunities</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="p-3 rounded-lg bg-oleavine-500/10 text-center">
+                                <div class="text-sm font-medium">"gym soap"</div>
+                                <div class="text-xs text-oleavine-400">Low competition</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-oleavine-500/10 text-center">
+                                <div class="text-sm font-medium">"athletes foot soap"</div>
+                                <div class="text-xs text-oleavine-400">High intent</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-oleavine-500/10 text-center">
+                                <div class="text-sm font-medium">"tea tree body wash"</div>
+                                <div class="text-xs text-oleavine-400">Growing</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-oleavine-500/10 text-center">
+                                <div class="text-sm font-medium">"natural antifungal"</div>
+                                <div class="text-xs text-oleavine-400">Underserved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENT CALENDAR SECTION -->
+                <div id="section-calendar" class="hidden section-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-display font-bold mb-2">Content Calendar</h2>
+                        <p class="text-white/50 text-sm">Plan and schedule your content</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-8 text-center">
+                        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-regular fa-calendar text-3xl text-white/30"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Content Calendar Coming Soon</h3>
+                        <p class="text-white/50 text-sm max-w-md mx-auto mb-4">Schedule posts, plan campaigns, and coordinate content across all platforms.</p>
+                        <button onclick="showNotification('Feature coming in next update', 'info')" class="px-4 py-2 rounded-lg bg-oleavine-600 text-sm">
+                            Get Notified When Ready
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CREATIVE LIBRARY SECTION -->
+                <div id="section-library" class="hidden section-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-display font-bold mb-2">Creative Library</h2>
+                        <p class="text-white/50 text-sm">Your best-performing assets</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-8 text-center">
+                        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-photo-film text-3xl text-white/30"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Connect Your Accounts</h3>
+                        <p class="text-white/50 text-sm max-w-md mx-auto mb-4">Link your social accounts to see your top performing content, video analytics, and creative performance data.</p>
+                        <button onclick="showNotification('API integration coming soon', 'info')" class="px-4 py-2 rounded-lg bg-oleavine-600 text-sm">
+                            Connect Accounts
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KEYWORD ANALYSIS SECTION -->
+                <div id="section-keywords" class="hidden section-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-display font-bold mb-2">Keyword Intelligence</h2>
+                        <p class="text-white/50 text-sm">High-intent keywords to drive organic traffic & paid acquisition</p>
+                    </div>
+
+                    <!-- Keyword Stats Overview -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Keywords Tracked</span>
+                            <div class="text-2xl font-display font-bold">47</div>
+                            <div class="text-[10px] text-white/30">Across 6 categories</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Avg. Monthly Searches</span>
+                            <div class="text-2xl font-display font-bold text-oleavine-400">2.4M</div>
+                            <div class="text-[10px] text-white/30">Total search volume</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Avg. CPC</span>
+                            <div class="text-2xl font-display font-bold text-emerald-400">$1.82</div>
+                            <div class="text-[10px] text-white/30">Google Ads benchmark</div>
+                        </div>
+                        <div class="glass-card rounded-xl p-4">
+                            <span class="text-white/40 text-xs uppercase">Content Gaps</span>
+                            <div class="text-2xl font-display font-bold text-amber-400">12</div>
+                            <div class="text-[10px] text-white/30">High-opportunity terms</div>
+                        </div>
+                    </div>
+
+                    <!-- High-Intent Buyer Keywords -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-display font-bold">🎯 High-Intent Buyer Keywords</h3>
+                                <p class="text-xs text-white/40 mt-1">People ready to purchase - prioritize these</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-oleavine-500/20 text-oleavine-400 text-xs">Priority</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-white/10 text-white/40 text-left">
+                                        <th class="py-3 px-2">Keyword</th>
+                                        <th class="py-3 px-2 text-right">Monthly Searches</th>
+                                        <th class="py-3 px-2 text-right">CPC</th>
+                                        <th class="py-3 px-2 text-center">Competition</th>
+                                        <th class="py-3 px-2 text-center">Priority</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">tea tree body wash for athletes foot</td>
+                                        <td class="py-3 px-2 text-right">14,800</td>
+                                        <td class="py-3 px-2 text-right text-emerald-400">$0.85</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs">Low</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-oleavine-500/20 text-oleavine-400 text-xs">🔥 High</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">natural antifungal soap</td>
+                                        <td class="py-3 px-2 text-right">9,600</td>
+                                        <td class="py-3 px-2 text-right text-emerald-400">$1.12</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs">Low</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-oleavine-500/20 text-oleavine-400 text-xs">🔥 High</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">best soap for gym</td>
+                                        <td class="py-3 px-2 text-right">22,000</td>
+                                        <td class="py-3 px-2 text-right text-amber-400">$2.40</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs">Medium</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-oleavine-500/20 text-oleavine-400 text-xs">🔥 High</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">tea tree soap for body odor</td>
+                                        <td class="py-3 px-2 text-right">8,100</td>
+                                        <td class="py-3 px-2 text-right text-emerald-400">$0.95</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs">Low</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs">Medium</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">organic body wash for men</td>
+                                        <td class="py-3 px-2 text-right">18,500</td>
+                                        <td class="py-3 px-2 text-right text-amber-400">$2.85</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs">High</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs">Medium</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5 hover:bg-white/5">
+                                        <td class="py-3 px-2 font-medium">mint tea tree body wash</td>
+                                        <td class="py-3 px-2 text-right">6,600</td>
+                                        <td class="py-3 px-2 text-right text-emerald-400">$0.72</td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs">Low</span></td>
+                                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 rounded bg-oleavine-500/20 text-oleavine-400 text-xs">🔥 High</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Long-Tail Opportunities -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="glass-card rounded-xl p-5">
+                            <h3 class="font-display font-bold mb-4">📈 Long-Tail Opportunities</h3>
+                            <p class="text-xs text-white/40 mb-4">Lower competition, high conversion potential</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div>
+                                        <p class="text-sm font-medium">"does tea tree oil help athletes foot"</p>
+                                        <p class="text-xs text-white/40">1,900 searches/mo • $0.45 CPC</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">Easy</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div>
+                                        <p class="text-sm font-medium">"natural soap for jock itch"</p>
+                                        <p class="text-xs text-white/40">2,400 searches/mo • $0.68 CPC</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">Easy</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div>
+                                        <p class="text-sm font-medium">"best natural body wash for gym rats"</p>
+                                        <p class="text-xs text-white/40">880 searches/mo • $0.52 CPC</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">Easy</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div>
+                                        <p class="text-sm font-medium">"neem soap for skin fungus"</p>
+                                        <p class="text-xs text-white/40">3,200 searches/mo • $0.91 CPC</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">Easy</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div>
+                                        <p class="text-sm font-medium">"can I use tea tree soap on my face"</p>
+                                        <p class="text-xs text-white/40">5,400 searches/mo • $0.38 CPC</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">Easy</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-xl p-5">
+                            <h3 class="font-display font-bold mb-4">🎬 Content Ideas from Keywords</h3>
+                            <p class="text-xs text-white/40 mb-4">Video concepts based on search demand</p>
+                            
+                            <div class="space-y-3">
+                                <div class="p-3 rounded-lg bg-oleavine-500/10 border border-oleavine-500/30">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-oleavine-400 text-xs font-bold">HIGH PRIORITY</span>
+                                        <span class="text-white/40 text-xs">14.8K searches</span>
+                                    </div>
+                                    <p class="text-sm font-medium">"How I fixed my athletes foot in 2 weeks"</p>
+                                    <p class="text-xs text-white/40 mt-1">Hook: Tea tree + neem combo</p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-white/5">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-blue-400 text-xs font-bold">MEDIUM</span>
+                                        <span class="text-white/40 text-xs">22K searches</span>
+                                    </div>
+                                    <p class="text-sm font-medium">"Gym bag essentials nobody talks about"</p>
+                                    <p class="text-xs text-white/40 mt-1">Hook: The soap athletes actually need</p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-white/5">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-blue-400 text-xs font-bold">MEDIUM</span>
+                                        <span class="text-white/40 text-xs">8.1K searches</span>
+                                    </div>
+                                    <p class="text-sm font-medium">"Why you still smell after showering"</p>
+                                    <p class="text-xs text-white/40 mt-1">Hook: Sulfate soaps don't clean bacteria</p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-white/5">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-blue-400 text-xs font-bold">MEDIUM</span>
+                                        <span class="text-white/40 text-xs">5.4K searches</span>
+                                    </div>
+                                    <p class="text-sm font-medium">"Dermatologist explains tea tree soap"</p>
+                                    <p class="text-xs text-white/40 mt-1">Hook: Authority content, trust builder</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Competitor Keyword Gaps -->
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <h3 class="font-display font-bold mb-4">🔍 Competitor Keyword Gaps</h3>
+                        <p class="text-xs text-white/40 mb-4">High-value terms your competitors rank for (that you don't)</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-lg bg-red-500/5 border border-red-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="font-bold text-sm">Dr. Squatch owns:</span>
+                                </div>
+                                <ul class="text-sm text-white/60 space-y-1">
+                                    <li>• "mens natural soap" (45K/mo)</li>
+                                    <li>• "organic soap for men" (18K/mo)</li>
+                                    <li>• "best mens body wash" (33K/mo)</li>
+                                </ul>
+                                <p class="text-xs text-amber-400 mt-2">💡 Counter: Target athletes specifically</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-red-500/5 border border-red-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="font-bold text-sm">Native owns:</span>
+                                </div>
+                                <ul class="text-sm text-white/60 space-y-1">
+                                    <li>• "natural body wash" (201K/mo)</li>
+                                    <li>• "clean body wash" (12K/mo)</li>
+                                    <li>• "aluminum free deodorant" (74K/mo)</li>
+                                </ul>
+                                <p class="text-xs text-amber-400 mt-2">💡 Counter: Focus on therapeutic benefits</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-oleavine-500/5 border border-oleavine-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="font-bold text-sm text-oleavine-400">YOU can own:</span>
+                                </div>
+                                <ul class="text-sm text-white/60 space-y-1">
+                                    <li>• "tea tree athletes foot" (14K/mo)</li>
+                                    <li>• "gym soap" (8K/mo)</li>
+                                    <li>• "neem body wash" (2K/mo)</li>
+                                    <li>• "antifungal body wash" (6K/mo)</li>
+                                </ul>
+                                <p class="text-xs text-oleavine-400 mt-2">✅ Blue ocean keywords</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seasonal Trends -->
+                    <div class="glass-card rounded-xl p-5">
+                        <h3 class="font-display font-bold mb-4">📅 Seasonal Keyword Trends</h3>
+                        <p class="text-xs text-white/40 mb-4">Plan content around search volume spikes</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="p-3 rounded-lg bg-white/5 text-center">
+                                <div class="text-sm font-medium text-oleavine-400">January</div>
+                                <div class="text-xs text-white/60 mt-1">"gym routine" +280%</div>
+                                <div class="text-[10px] text-white/40">New Year resolutions</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-white/5 text-center">
+                                <div class="text-sm font-medium text-oleavine-400">March-May</div>
+                                <div class="text-xs text-white/60 mt-1">"summer body" +150%</div>
+                                <div class="text-[10px] text-white/40">Beach prep season</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-white/5 text-center">
+                                <div class="text-sm font-medium text-oleavine-400">June-Aug</div>
+                                <div class="text-xs text-white/60 mt-1">"sweat" "odor" +200%</div>
+                                <div class="text-[10px] text-white/40">Peak summer heat</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-white/5 text-center">
+                                <div class="text-sm font-medium text-oleavine-400">Sept</div>
+                                <div class="text-xs text-white/60 mt-1">"back to gym" +180%</div>
+                                <div class="text-[10px] text-white/40">Routine restart</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav fixed bottom-0 left-0 right-0 glass border-t border-white/10 z-50">
+        <div class="flex justify-around py-2">
+            <a href="#" onclick="showSection('overview'); return false;" class="flex flex-col items-center py-1 px-3 text-oleavine-400">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span class="text-[10px]">Home</span>
+            </a>
+            <a href="#" onclick="showSection('platforms'); return false;" class="flex flex-col items-center py-1 px-3 text-white/50">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+                <span class="text-[10px]">Platforms</span>
+            </a>
+            <a href="#" onclick="showSection('ads'); return false;" class="flex flex-col items-center py-1 px-3 text-white/50">
+                <i class="fa-solid fa-bullhorn text-lg"></i>
+                <span class="text-[10px]">Ads</span>
+            </a>
+            <a href="#" onclick="showSection('competitors'); return false;" class="flex flex-col items-center py-1 px-3 text-white/50">
+                <i class="fa-solid fa-chess text-lg"></i>
+                <span class="text-[10px]">Intel</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Data - Updated March 2026 based on actual research
+        const platforms = {
+            tiktok: { name: 'TikTok', handle: '@oleavine', followers: 102, likes: 823, videos: 42, engagement: 6.2, growth: 12, status: 'active', color: 'bg-black', icon: 'fa-brands fa-tiktok', url: 'https://www.tiktok.com/@oleavine', bio: 'Your skin\'s daily reset. 5000+ 5 Star Reviews on Amazon. Now on TikTok Shop' },
+            instagram: { name: 'Instagram', handle: '@theratreeco', followers: '1.2K+', posts: 45, engagement: 3.5, growth: 8, status: 'active', color: 'bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500', icon: 'fa-brands fa-instagram', url: 'https://www.instagram.com/theratreeco/', bio: 'Premium Natural Foot & Body Care with Tea Tree Oil' },
+            youtube: { name: 'YouTube', handle: '@Oleavine', subscribers: 18, videos: 42, engagement: 2.1, growth: 15, status: 'growing', color: 'bg-red-600', icon: 'fa-brands fa-youtube', url: 'https://www.youtube.com/@Oleavine', bio: 'Tea Tree & Neem-Infused Formulas for Healthier, Revitalized Skin' },
+            facebook: { name: 'Facebook', handle: 'TheraTree', followers: '1.2K', posts: 24, engagement: 4.2, growth: 5, status: 'active', color: 'bg-blue-600', icon: 'fa-brands fa-facebook-f', url: 'https://www.facebook.com/oleavine/', bio: 'Premium Natural Foot & Body Care made with 100% Pure Organic Australian Tea Tree Oil' },
+            linkedin: { name: 'LinkedIn', handle: '/company/oleavine', followers: 6, posts: 3, engagement: 0.5, growth: 0, status: 'minimal', color: 'bg-blue-700', icon: 'fa-brands fa-linkedin-in', url: 'https://www.linkedin.com/company/oleavine', bio: 'Natural skincare company' }
+        };
+
+        // Navigation with localStorage
+        function showSection(section) {
+            document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('section-' + section).classList.remove('hidden');
+            
+            // Save current section to localStorage
+            localStorage.setItem('currentSection', section);
+            
+            const titles = {
+                'overview': 'Executive Summary',
+                'platforms': 'Platform Analytics',
+                'ads': 'Paid Ads Readiness',
+                'competitors': 'Competitor Intelligence',
+                'keywords': 'Keyword Intelligence',
+                'calendar': 'Content Calendar',
+                'library': 'Creative Library'
+            };
+            document.getElementById('page-title').textContent = titles[section] || 'Dashboard';
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('fixed');
+            sidebar.classList.toggle('inset-y-0');
+            sidebar.classList.toggle('left-0');
+            sidebar.classList.toggle('z-50');
+            sidebar.classList.toggle('w-64');
+        }
+
+        // Render Platform List (Overview)
+        function renderPlatformList() {
+            const container = document.getElementById('platform-list');
+            const statusColors = { critical: 'bg-red-500/20 text-red-400 border-red-500/30', active: 'bg-oleavine-500/20 text-oleavine-400 border-oleavine-500/30', minimal: 'bg-white/10 text-white/40 border-white/10', growing: 'bg-blue-500/20 text-blue-400 border-blue-500/30' };
+            const statusLabels = { critical: '🚨 Critical', active: '✅ Active', minimal: '⚪ Minimal', growing: '📈 Growing' };
+
+            container.innerHTML = Object.values(platforms).map(p => {
+                const count = p.followers || p.subscribers;
+                const label = p.subscribers ? 'subscribers' : 'followers';
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer" onclick="window.open('${p.url}', '_blank')">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg ${p.color} flex items-center justify-center"><i class="${p.icon} text-white"></i></div>
+                            <div>
+                                <p class="text-sm font-medium">${p.name}</p>
+                                <p class="text-[10px] text-white/40">${p.handle}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold">${count}</p>
+                            <p class="text-[10px] text-white/40">${label}</p>
+                            <span class="px-2 py-0.5 rounded text-[10px] ${statusColors[p.status]} border">${statusLabels[p.status]}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Platform Details (Platforms Section)
+        function renderPlatformDetails() {
+            const container = document.getElementById('platform-details');
+            const statusColors = { critical: 'border-red-500/30 bg-red-500/5', active: 'border-oleavine-500/30 bg-oleavine-500/5', minimal: 'border-white/10 bg-white/5', growing: 'border-blue-500/30 bg-blue-500/5' };
+
+            container.innerHTML = Object.values(platforms).map(p => {
+                const count = p.followers || p.subscribers;
+                const label = p.subscribers ? 'subscribers' : 'followers';
+                const contentCount = p.videos || p.posts;
+                const contentLabel = p.videos ? 'videos' : 'posts';
+                return `
+                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg ${p.color} flex items-center justify-center"><i class="${p.icon} text-white text-lg"></i></div>
+                            <div>
+                                <h3 class="font-display font-bold">${p.name}</h3>
+                                <a href="${p.url}" target="_blank" class="text-xs text-oleavine-400">${p.handle} →</a>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div><div class="text-2xl font-bold">${count}</div><div class="text-[10px] text-white/40 uppercase">${label}</div></div>
+                            <div><div class="text-2xl font-bold">${contentCount}</div><div class="text-[10px] text-white/40 uppercase">${contentLabel}</div></div>
+                            <div><div class="text-2xl font-bold text-oleavine-400">${p.engagement}%</div><div class="text-[10px] text-white/40 uppercase">engagement</div></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Chart
+        function initChart() {
+            const ctx = document.getElementById('performanceChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Total Followers',
+                        data: [308, 313, 310, 323, 328, 333, 344],
+                        borderColor: '#4ade80',
+                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: 'rgba(255,255,255,0.6)' } } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' } }
+                    }
+                }
+            });
+        }
+
+        // Cache busting - force reload if stale
+        const BUILD_TIMESTAMP = '20260319_0138';
+        console.log('Dashboard Build:', BUILD_TIMESTAMP);
+        
+        // Initialize with section restore
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPlatformList();
+            renderPlatformDetails();
+            initChart();
+            
+            // Restore saved section or default to overview
+            const savedSection = localStorage.getItem('currentSection') || 'overview';
+            showSection(savedSection);
+            
+            console.log('✅ Dashboard loaded - v2.1');
+        });
+    </script>
+</body>
+</html>
