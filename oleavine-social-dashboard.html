@@ -780,10 +780,13 @@
             linkedin: { name: 'LinkedIn', handle: '/company/oleavine', followers: 6, posts: 3, engagement: 0.5, growth: 0, status: 'minimal', color: 'bg-blue-700', icon: 'fa-brands fa-linkedin-in', url: 'https://www.linkedin.com/company/oleavine', bio: 'Natural skincare company' }
         };
 
-        // Navigation
+        // Navigation with localStorage
         function showSection(section) {
             document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
             document.getElementById('section-' + section).classList.remove('hidden');
+            
+            // Save current section to localStorage
+            localStorage.setItem('currentSection', section);
             
             const titles = {
                 'overview': 'Executive Summary',
@@ -897,11 +900,16 @@
         const BUILD_TIMESTAMP = '20260319_0138';
         console.log('Dashboard Build:', BUILD_TIMESTAMP);
         
-        // Initialize
+        // Initialize with section restore
         document.addEventListener('DOMContentLoaded', () => {
             renderPlatformList();
             renderPlatformDetails();
             initChart();
+            
+            // Restore saved section or default to overview
+            const savedSection = localStorage.getItem('currentSection') || 'overview';
+            showSection(savedSection);
+            
             console.log('✅ Dashboard loaded - v2.1');
         });
     </script>
