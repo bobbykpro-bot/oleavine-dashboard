@@ -172,8 +172,20 @@
                 <!-- PLATFORMS SECTION -->
                 <div id="section-platforms" class="hidden section-content">
                     <h2 class="text-2xl font-display font-bold mb-4">Platform Analytics</h2>
-                    <div id="platform-details" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- Platform Overview Cards -->
+                    <div id="platform-overview" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <!-- Populated by JS -->
+                    </div>
+                    
+                    <!-- Detailed Platform View -->
+                    <div id="platform-detail-view" class="hidden">
+                        <button onclick="showPlatformOverview()" class="mb-4 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Platforms
+                        </button>
+                        <div id="platform-detail-content">
+                            <!-- Populated by JS -->
+                        </div>
                     </div>
                 </div>
 
@@ -773,11 +785,107 @@
     <script>
         // Data - Updated March 2026 based on actual research
         const platforms = {
-            tiktok: { name: 'TikTok', handle: '@oleavine', followers: 102, likes: 823, videos: 42, engagement: 6.2, growth: 12, status: 'active', color: 'bg-black', icon: 'fa-brands fa-tiktok', url: 'https://www.tiktok.com/@oleavine', bio: 'Your skin\'s daily reset. 5000+ 5 Star Reviews on Amazon. Now on TikTok Shop' },
-            instagram: { name: 'Instagram', handle: '@theratreeco', followers: '1.2K+', posts: 45, engagement: 3.5, growth: 8, status: 'active', color: 'bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500', icon: 'fa-brands fa-instagram', url: 'https://www.instagram.com/theratreeco/', bio: 'Premium Natural Foot & Body Care with Tea Tree Oil' },
-            youtube: { name: 'YouTube', handle: '@Oleavine', subscribers: 18, videos: 42, engagement: 2.1, growth: 15, status: 'growing', color: 'bg-red-600', icon: 'fa-brands fa-youtube', url: 'https://www.youtube.com/@Oleavine', bio: 'Tea Tree & Neem-Infused Formulas for Healthier, Revitalized Skin' },
-            facebook: { name: 'Facebook', handle: 'TheraTree', followers: '1.2K', posts: 24, engagement: 4.2, growth: 5, status: 'active', color: 'bg-blue-600', icon: 'fa-brands fa-facebook-f', url: 'https://www.facebook.com/oleavine/', bio: 'Premium Natural Foot & Body Care made with 100% Pure Organic Australian Tea Tree Oil' },
-            linkedin: { name: 'LinkedIn', handle: '/company/oleavine', followers: 6, posts: 3, engagement: 0.5, growth: 0, status: 'minimal', color: 'bg-blue-700', icon: 'fa-brands fa-linkedin-in', url: 'https://www.linkedin.com/company/oleavine', bio: 'Natural skincare company' }
+            tiktok: { 
+                name: 'TikTok', 
+                handle: '@oleavine', 
+                followers: 102, 
+                likes: 823, 
+                videos: 42, 
+                engagement: 6.2, 
+                growth: 12, 
+                status: 'active', 
+                color: 'bg-black', 
+                icon: 'fa-brands fa-tiktok', 
+                url: 'https://www.tiktok.com/@oleavine', 
+                bio: 'Your skin\'s daily reset. 5000+ 5 Star Reviews on Amazon. Now on TikTok Shop',
+                recentPosts: [
+                    { views: '1.2K', likes: 89, comments: 12, shares: 5, date: '2 days ago', caption: 'Morning routine with TheraTree 🌿' },
+                    { views: '856', likes: 67, comments: 8, shares: 3, date: '5 days ago', caption: 'Why athletes love our soap' },
+                    { views: '2.1K', likes: 156, comments: 23, shares: 18, date: '1 week ago', caption: 'Gym bag essential you need' }
+                ],
+                topHashtags: ['#theratree', '#teatree', '#gymtok', '#skincare', '#natural'],
+                bestTime: '6-9 PM EST',
+                audience: { age: '18-34', gender: '62% Male', topCountry: 'USA' }
+            },
+            instagram: { 
+                name: 'Instagram', 
+                handle: '@theratreeco', 
+                followers: '1.2K+', 
+                posts: 45, 
+                engagement: 3.5, 
+                growth: 8, 
+                status: 'active', 
+                color: 'bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500', 
+                icon: 'fa-brands fa-instagram', 
+                url: 'https://www.instagram.com/theratreeco/', 
+                bio: 'Premium Natural Foot & Body Care with Tea Tree Oil',
+                recentPosts: [
+                    { likes: 234, comments: 18, saves: 45, reach: '1.8K', date: '1 day ago', type: 'Carousel', caption: '5 reasons to switch to natural soap' },
+                    { likes: 189, comments: 12, saves: 23, reach: '1.2K', date: '3 days ago', type: 'Reel', caption: 'POV: Your post-gym shower' },
+                    { likes: 312, comments: 28, saves: 67, reach: '2.4K', date: '5 days ago', type: 'Single', caption: 'Customer transformation Tuesday' }
+                ],
+                topHashtags: ['#theratree', '#teatreeoil', '#naturalsoap', '#skincareroutine', '#selfcare'],
+                bestTime: '11 AM - 1 PM EST',
+                audience: { age: '25-44', gender: '58% Female', topCountry: 'USA' }
+            },
+            youtube: { 
+                name: 'YouTube', 
+                handle: '@Oleavine', 
+                subscribers: 18, 
+                videos: 42, 
+                engagement: 2.1, 
+                growth: 15, 
+                status: 'growing', 
+                color: 'bg-red-600', 
+                icon: 'fa-brands fa-youtube', 
+                url: 'https://www.youtube.com/@Oleavine', 
+                bio: 'Tea Tree & Neem-Infused Formulas for Healthier, Revitalized Skin',
+                recentVideos: [
+                    { title: 'The TheraTree Patrol: Grand Theft Tea Tree', views: 5, likes: 2, date: '9 days ago', duration: '0:45' },
+                    { title: 'Tea Tree Oil Products That Actually Work', views: 1, likes: 0, date: '2 weeks ago', duration: '3:12' },
+                    { title: 'Sore, Tired Feet? This Actually Helps', views: 1100, likes: 45, date: '3 weeks ago', duration: '2:34' }
+                ],
+                bestTime: '2-4 PM EST',
+                audience: { age: '35-54', gender: '52% Female', topCountry: 'USA' }
+            },
+            facebook: { 
+                name: 'Facebook', 
+                handle: 'TheraTree', 
+                followers: '1.2K', 
+                posts: 24, 
+                engagement: 4.2, 
+                growth: 5, 
+                status: 'active', 
+                color: 'bg-blue-600', 
+                icon: 'fa-brands fa-facebook-f', 
+                url: 'https://www.facebook.com/oleavine/', 
+                bio: 'Premium Natural Foot & Body Care made with 100% Pure Organic Australian Tea Tree Oil',
+                recentPosts: [
+                    { likes: 89, comments: 12, shares: 23, reach: '2.1K', date: '6 hours ago', caption: 'Dewy skin starts before moisturizer' },
+                    { likes: 156, comments: 34, shares: 45, reach: '3.8K', date: '2 days ago', caption: 'New packaging, same powerful formula' },
+                    { likes: 67, comments: 8, shares: 12, reach: '1.4K', date: '4 days ago', caption: 'Customer spotlight: 30-day results' }
+                ],
+                bestTime: '1-3 PM EST',
+                audience: { age: '35-64', gender: '48% Female', topCountry: 'USA' }
+            },
+            linkedin: { 
+                name: 'LinkedIn', 
+                handle: '/company/oleavine', 
+                followers: 6, 
+                posts: 3, 
+                engagement: 0.5, 
+                growth: 0, 
+                status: 'minimal', 
+                color: 'bg-blue-700', 
+                icon: 'fa-brands fa-linkedin-in', 
+                url: 'https://www.linkedin.com/company/oleavine', 
+                bio: 'Natural skincare company',
+                recentPosts: [
+                    { likes: 2, comments: 0, shares: 0, impressions: 45, date: '2 weeks ago', caption: 'Introducing our B2B wholesale program' }
+                ],
+                bestTime: '8-10 AM EST',
+                audience: { age: '30-55', gender: 'N/A', topCountry: 'USA' }
+            }
         };
 
         // Navigation with localStorage
@@ -838,33 +946,181 @@
             }).join('');
         }
 
-        // Render Platform Details (Platforms Section)
-        function renderPlatformDetails() {
-            const container = document.getElementById('platform-details');
+        // Render Platform Overview Cards
+        function renderPlatformOverview() {
+            const container = document.getElementById('platform-overview');
             const statusColors = { critical: 'border-red-500/30 bg-red-500/5', active: 'border-oleavine-500/30 bg-oleavine-500/5', minimal: 'border-white/10 bg-white/5', growing: 'border-blue-500/30 bg-blue-500/5' };
+            const statusLabels = { critical: '🚨 Critical', active: '✅ Active', minimal: '⚪ Minimal', growing: '📈 Growing' };
 
-            container.innerHTML = Object.values(platforms).map(p => {
+            container.innerHTML = Object.entries(platforms).map(([key, p]) => {
                 const count = p.followers || p.subscribers;
-                const label = p.subscribers ? 'subscribers' : 'followers';
+                const label = p.subscribers ? 'Subscribers' : 'Followers';
                 const contentCount = p.videos || p.posts;
-                const contentLabel = p.videos ? 'videos' : 'posts';
+                const contentLabel = p.videos ? 'Videos' : 'Posts';
                 return `
-                    <div class="glass-card rounded-xl p-5 border ${statusColors[p.status]}">
+                    <div onclick="showPlatformDetail('${key}')" class="glass-card rounded-xl p-5 border ${statusColors[p.status]} cursor-pointer hover:bg-white/5 transition-all group">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-lg ${p.color} flex items-center justify-center"><i class="${p.icon} text-white text-lg"></i></div>
-                            <div>
-                                <h3 class="font-display font-bold">${p.name}</h3>
-                                <a href="${p.url}" target="_blank" class="text-xs text-oleavine-400">${p.handle} →</a>
+                            <div class="w-12 h-12 rounded-lg ${p.color} flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="${p.icon} text-white text-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-display font-bold">${p.name}</h3>
+                                    <span class="px-2 py-0.5 rounded text-[10px] ${statusColors[p.status]} border">${statusLabels[p.status]}</span>
+                                </div>
+                                <a href="${p.url}" target="_blank" onclick="event.stopPropagation()" class="text-xs text-oleavine-400 hover:underline">${p.handle} →</a>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-4 text-center">
-                            <div><div class="text-2xl font-bold">${count}</div><div class="text-[10px] text-white/40 uppercase">${label}</div></div>
-                            <div><div class="text-2xl font-bold">${contentCount}</div><div class="text-[10px] text-white/40 uppercase">${contentLabel}</div></div>
-                            <div><div class="text-2xl font-bold text-oleavine-400">${p.engagement}%</div><div class="text-[10px] text-white/40 uppercase">engagement</div></div>
+                        <div class="grid grid-cols-3 gap-4 text-center mb-4">
+                            <div class="p-2 rounded-lg bg-white/5">
+                                <div class="text-2xl font-bold">${count}</div>
+                                <div class="text-[10px] text-white/40 uppercase">${label}</div>
+                            </div>
+                            <div class="p-2 rounded-lg bg-white/5">
+                                <div class="text-2xl font-bold">${contentCount}</div>
+                                <div class="text-[10px] text-white/40 uppercase">${contentLabel}</div>
+                            </div>
+                            <div class="p-2 rounded-lg bg-white/5">
+                                <div class="text-2xl font-bold text-oleavine-400">${p.engagement}%</div>
+                                <div class="text-[10px] text-white/40 uppercase">Engagement</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-xs text-white/50">
+                            <span>📈 +${p.growth}% this month</span>
+                            <span class="group-hover:text-oleavine-400 transition-colors">Click for details →</span>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        // Show Platform Detail View
+        function showPlatformDetail(platformKey) {
+            const p = platforms[platformKey];
+            document.getElementById('platform-overview').classList.add('hidden');
+            document.getElementById('platform-detail-view').classList.remove('hidden');
+            
+            const contentCount = p.videos || p.posts;
+            const contentLabel = p.videos ? 'Videos' : 'Posts';
+            const followerLabel = p.subscribers ? 'Subscribers' : 'Followers';
+            
+            let recentContentHtml = '';
+            
+            if (p.recentPosts || p.recentVideos) {
+                const content = p.recentPosts || p.recentVideos;
+                recentContentHtml = `
+                    <div class="glass-card rounded-xl p-5 mb-6">
+                        <h3 class="font-display font-bold mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-photo-film text-oleavine-400"></i>
+                            Recent ${contentLabel}
+                        </h3>
+                        <div class="space-y-3">
+                            ${content.map(item => `
+                                <div class="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <p class="text-sm font-medium flex-1 mr-4">${item.caption || item.title}</p>
+                                        <span class="text-xs text-white/40 whitespace-nowrap">${item.date}</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-xs">
+                                        ${item.views ? `<span class="text-white/60">👁 ${item.views} views</span>` : ''}
+                                        ${item.reach ? `<span class="text-white/60">📊 ${item.reach} reach</span>` : ''}
+                                        ${item.impressions ? `<span class="text-white/60">👁 ${item.impressions} impressions</span>` : ''}
+                                        <span class="text-oleavine-400">❤ ${item.likes} likes</span>
+                                        ${item.comments !== undefined ? `<span class="text-white/60">💬 ${item.comments}</span>` : ''}
+                                        ${item.shares !== undefined ? `<span class="text-white/60">🔄 ${item.shares}</span>` : ''}
+                                        ${item.saves !== undefined ? `<span class="text-white/60">🔖 ${item.saves} saves</span>` : ''}
+                                    </div>                                </div>                            `).join('')}
+                        </div>
+                    </div>                `;
+            }
+            
+            let hashtagsHtml = '';
+            if (p.topHashtags) {
+                hashtagsHtml = `
+                    <div class="glass-card rounded-xl p-5">
+                        <h3 class="font-display font-bold mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-hashtag text-oleavine-400"></i>
+                            Top Hashtags
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            ${p.topHashtags.map(tag => `
+                                <span class="px-3 py-1 rounded-full bg-white/10 text-sm hover:bg-oleavine-500/20 transition-colors cursor-pointer">${tag}</span>                            `).join('')}
+                        </div>
+                    </div>                `;
+            }
+            
+            document.getElementById('platform-detail-content').innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-xl ${p.color} flex items-center justify-center">
+                            <i class="${p.icon} text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-display font-bold">${p.name}</h2>
+                            <a href="${p.url}" target="_blank" class="text-oleavine-400 hover:underline">${p.handle} →</a>
+                        </div>
+                    </div>
+                    <p class="text-white/60">${p.bio}</p>
+                </div>
+                
+                <!-- Key Metrics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-card rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold">${p.followers || p.subscribers}</div>
+                        <div class="text-xs text-white/40 uppercase">${followerLabel}</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-oleavine-400">${p.engagement}%</div>
+                        <div class="text-xs text-white/40 uppercase">Engagement Rate</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold">${contentCount}</div>
+                        <div class="text-xs text-white/40 uppercase">${contentLabel}</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-emerald-400">+${p.growth}%</div>
+                        <div class="text-xs text-white/40 uppercase">Growth (30d)</div>
+                    </div>
+                </div>
+                
+                <!-- Audience Insights -->
+                <div class="glass-card rounded-xl p-5 mb-6">
+                    <h3 class="font-display font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-oleavine-400"></i>
+                        Audience Insights
+                    </h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-white/5 text-center">
+                            <div class="text-sm text-white/40 mb-1">Top Age Group</div>
+                            <div class="font-bold">${p.audience.age}</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white/5 text-center">
+                            <div class="text-sm text-white/40 mb-1">Gender Split</div>
+                            <div class="font-bold">${p.audience.gender}</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white/5 text-center">
+                            <div class="text-sm text-white/40 mb-1">Top Country</div>
+                            <div class="font-bold">${p.audience.topCountry}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="fa-regular fa-clock text-amber-400"></i>
+                            <span class="text-white/60">Best time to post:</span>
+                            <span class="font-medium text-amber-400">${p.bestTime}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${recentContentHtml}
+                ${hashtagsHtml}
+            `;
+        }
+        
+        function showPlatformOverview() {
+            document.getElementById('platform-overview').classList.remove('hidden');
+            document.getElementById('platform-detail-view').classList.add('hidden');
         }
 
         // Chart
@@ -903,7 +1159,7 @@
         // Initialize with section restore
         document.addEventListener('DOMContentLoaded', () => {
             renderPlatformList();
-            renderPlatformDetails();
+            renderPlatformOverview();
             initChart();
             
             // Restore saved section or default to overview
